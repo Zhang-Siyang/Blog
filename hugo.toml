@@ -1,4 +1,15 @@
-baseURL = 'https://blog.zhangsy.me/'
-languageCode = 'en-us'
-title = '博客'
+baseURL = 'https://sy.netlify.app/'
+languageCode = 'zh-CN'
+title = "Siyang's Blog"
 theme = 'yinyang'
+
+[params]
+headTitle = 'Siyang Z'
+
+[[params.socials]]
+name = "Github"
+link = "https://github.com/Zhang-Siyang"
+
+[[params.socials]]
+name = "IG"
+link = "https://www.instagram.com/siyang_zhang_/"
