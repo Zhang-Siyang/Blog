@@ -13,3 +13,8 @@ link = "https://github.com/Zhang-Siyang"
 [[params.socials]]
 name = "IG"
 link = "https://www.instagram.com/siyang_zhang_/"
+
+[markup.highlight]
+style = "xcode"
+codeFences = true
+lineNos = "inline"
