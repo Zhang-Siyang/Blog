@@ -8,15 +8,15 @@ title = '关于一道面试题的分析：Batching HTTP 请求'
 
 背景：`FacesDetact()` 只能串行调用，现在希望为程序添加批量处理功能，但不允许设置 delay 时间窗口，来一个请求，处理一个请求
 
-分析：请求将会乱序到达，如果不设置双上限（达到数量 or timer 到期），其实程序无法优化`第一个请求`，需要处理的目标换成了后续积压的请求
+分析：请求将会乱序到达，如果不设置数量或时间方面的窗口，其实程序需要处理的目标是积压态的网络请求（协程）
 
-思路：建立某种 buffer，既然目标是 batch 调用，那么就在积压出现的时候，把被积压的请求进行批量取出，批量调用，然后返回
+思路：如果需要对分散且独立到达的事件（参RxTS）做批量处理，其中必然需要有一个收束的阶段。如果能意识到这种现象的存在，最好是能意识到，可以针对该渠道做 batching 处理。在积压出现的时候，把被积压的请求进行批量取出，批量调用，然后返回
 
-当时没有回答得很好，在处理请求 warper 的时候手忙脚乱，在 API 生命周期管理也没有做好。后面和 AI 聊天，虽然它没有给出解答，但出乎意料地给了我如何协调`等待与响应`的想法：可以使用 channel 呀！
+当时没有回答得很好，在处理请求装饰器的时候手忙脚乱，请求可以收拢，但生命周期如何管理呢？可能还是常见的编程范式用多了，哈哈，后来和 GPT 聊天，它虽然没有给出正确的答案，但它对 channel 的熟练运用到是给了我启发
 
-也就是，可以把 chan 作为参数传递给消费者，也契合了 Go 的「share memory by communicating」
+Go 有「share memory by communicating」，我们可以控制权逆转，让我们的 handler 陷入 <-chan 的等待状态（当时是预期进行接口 HiJack）
 
-后来想想，这不就是批量扇出扇入吗？// 大概是吧，明天我确认一下
+后来想想，这不就是批量扇出扇入吗？查了下资料，的确是几乎完全一致的题目
 
 下附草稿解答
 
@@ -75,7 +75,7 @@ func FacesDetactHandler(w http.ResponseWriter, r *http.Request) {
 
 type QueueItem struct {
 	Image         Image
-	ResultWriteTo chan<- DetactResult // 最好设置 buffer=1 ?
+	ResultWriteTo chan<- DetactResult // FIXME 可以根据情况分析有没有必要配置 len=1 的 buffer
 }
 
 var queue chan QueueItem
@@ -166,10 +166,12 @@ func FacesDetact(images []Image) (results []DetactResult) {
 }
 ```
 
-其实这个题目也可以接下来讲下去。因为 poolSize、具体耗时曲线、请求到达频次、放行逻辑，它们组成了一个可供线性规划的区域。
+在面试结束后重写优化以及调试的时候，观察数据会很有趣，因为机械压测带来的流量（like wrk but wrk2）很有规律，联合起 poolSize、具体耗时曲线、请求到达频次、放行逻辑，它们组成了一个可供线性规划的区域。
 
-此时此刻理解了 Java 仔，「这些都是可以调优的空间」。明天再改稿子吧
+此时此刻理解了 Java 仔，「这些都是可以调优的空间」。
 
-备忘一下：其实服务运行稳定角度也可以讲，如果崩溃怎么办，GC是不是有压力、Apifox 的压测启动又慢又不如 wrk
+队列中的压力、消费速度，其实都是函数曲线的一部分
 
-TODO：vibe 一个 wrk2-go
+自己测试中发现 Apifox 的压测启动速度真的超逊，远远不如 wrk。
+
+BTW. 也许可以 vibe 一个 wrk2-go #TODO
