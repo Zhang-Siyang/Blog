@@ -5,6 +5,16 @@ theme = 'yinyang'
 
 [params]
 headTitle = 'Siyang Z'
+extraHead = '''
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JW48W178T1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JW48W178T1');
+</script>'''
 
 [[params.socials]]
 name = "Github"
