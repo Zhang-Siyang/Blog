@@ -1,5 +1,5 @@
 [build.environment]
-HUGO_VERSION = "0.157.0" # 指示使用 Hugo 环境构建
+HUGO_VERSION = "0.157.0"
 
 [build]
 publish = "public"

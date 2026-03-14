@@ -1,20 +1,9 @@
-baseURL = 'https://sy.netlify.app/'
 languageCode = 'zh-CN'
 title = "Siyang's Blog"
 theme = 'yinyang'
 
 [params]
 headTitle = 'Siyang Z'
-extraHead = '''
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JW48W178T1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-JW48W178T1');
-</script>'''
 
 [[params.socials]]
 name = "Github"
@@ -24,7 +13,23 @@ link = "https://github.com/Zhang-Siyang"
 name = "IG"
 link = "https://www.instagram.com/siyang_zhang_/"
 
+[[params.socials]]
+name = "RSS"
+link = "/index.xml"
+
 [markup.highlight]
 style = "xcode"
 codeFences = true
 lineNos = "inline"
+
+[services]
+  [services.googleAnalytics]
+    id = 'G-JW48W178T1'
+
+[module]
+  [[module.mounts]]
+    source = 'content-tech'
+    target = 'content/posts'
+  [[module.mounts]]
+    source = 'content-life'
+    target = 'content/posts'

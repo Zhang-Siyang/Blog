@@ -2,6 +2,7 @@
 date = '2026-02-27T02:25:02+08:00'
 draft = false
 title = '关于一道面试题的分析：Batching HTTP 请求'
+tags = ['tech']
 +++
 
 最近在找工作，其中一家公司提出这道题目。
