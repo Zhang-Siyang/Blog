@@ -19,8 +19,6 @@ link = "/index.xml"
 
 [markup.highlight]
 style = "xcode"
-codeFences = true
-lineNos = "inline"
 
 [services]
   [services.googleAnalytics]
