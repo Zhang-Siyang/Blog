@@ -1,18 +1,17 @@
 +++
 date = '2026-03-16T00:01:50+08:00'
 draft = false
-title = '【翻译】深入理解 Go 运行时：调度器 (Scheduler)'
+title = '【翻译】深入理解 Go 运行时：调度器'
 author = 'Jesús Espino'
-description = '本文翻译自深入探讨 Go 调度器的 GMP 模型、goroutine 生命周期、调度循环、工作窃取、自旋线程等核心机制，帮助你理解 Go 并发模型背后的实现原理。'
+description = '本文深入探讨 Go 调度器的 GMP 模型、goroutine 生命周期、调度循环、工作窃取、自旋线程等核心机制，帮助你理解 Go 并发模型背后的实现原理。'
 slug = 'go-runtime-scheduler'
 tags = ['翻译']
 +++
 
-> 本文章为译文，原作者 Jesús Espino。在这里查看他关于 Go Runtime 的系列文章：[Understanding the Go Runtime
-](https://internals-for-interns.com/series/understanding-the-go-runtime/)
+> 本文章为译文，原作者 Jesús Espino。在这里查看他关于 Go Runtime 的系列文章：[Understanding the Go Runtime](https://internals-for-interns.com/series/understanding-the-go-runtime/)
 
 
-![调度器](https://i.imgur.com/1yVCPoI.webp)
+![首图](https://i.imgur.com/1yVCPoI.webp)
 
 在 [上一篇文章](https://internals-for-interns.com/posts/go-memory-allocator/) 中，我们探讨了 Go 的内存分配器 (memory allocator) 如何管理堆内存——从操作系统获取大块区域 (arenas)，将它们划分为 spans 和大小类 (size classes)，并使用三级层次结构 (mcache, mcentral, mheap) 使得大多数分配操作无需加锁。其中一个关键细节是每个 **P**（处理器）都有自己的内存缓存。但我们从未真正解释过 P *是什么*，或者运行时如何决定哪个 goroutine 在哪个线程上运行。这正是调度器的工作，也是我们今天要探讨的内容。
 
@@ -236,4 +235,4 @@ Go 调度器使用 **GMP 模型** 将 goroutine 多路复用到 OS 线程上： 
 
 如果你想自己探索实现，主要的调度器代码位于 [`src/runtime/proc.go`](https://github.com/golang/go/blob/go1.26.0/src/runtime/proc.go) 中，数据结构在 [`src/runtime/runtime2.go`](https://github.com/golang/go/blob/go1.26.0/src/runtime/runtime2.go)，汇编例程在 `src/runtime/asm_*.s`。
 
-在下一篇文章中，我们将探讨 **垃圾回收器 (garbage collector)** ——它如何追踪哪些对象仍然存活，并回收其余部分，同时让你的程序继续运行。
+在下一篇文章中，我们将探讨 **[垃圾回收器](/posts/go-garbage-collector/)** ——它如何追踪哪些对象仍然存活，并回收其余部分，同时让你的程序继续运行。
