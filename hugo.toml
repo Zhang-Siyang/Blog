@@ -4,6 +4,7 @@ theme = 'yinyang'
 
 [params]
 headTitle = 'Siyang Z'
+mainSections = ['tech', 'life']
 
 [[params.socials]]
 name = "Github"
@@ -24,10 +25,14 @@ style = "xcode"
   [services.googleAnalytics]
     id = 'G-JW48W178T1'
 
+[permalinks.page]
+tech = '/posts/:slugorcontentbasename/'
+life = '/posts/:slugorcontentbasename/'
+
 [module]
   [[module.mounts]]
     source = 'content-tech'
-    target = 'content/posts'
+    target = 'content/tech'
   [[module.mounts]]
     source = 'content-life'
-    target = 'content/posts'
+    target = 'content/life'
