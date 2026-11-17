@@ -5,6 +5,7 @@ theme = 'yinyang'
 [params]
 headTitle = 'Siyang Z'
 mainSections = ['tech', 'life']
+extraCSSFiles = ['css/post-tabs.css']
 
 [[params.socials]]
 name = "Github"

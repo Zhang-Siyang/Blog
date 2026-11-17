@@ -2,7 +2,7 @@
 <html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
 {{ partial "head.html" . }}
 
-<body>
+<body data-default-tab="{{ if not .IsHome }}{{ .Section }}{{ end }}">
   <article class="posts">
     <div class="row">
       <div class="col-xs-12">
@@ -11,12 +11,14 @@
         {{ if not .IsHome }}
           {{ $channel = .Section }}
         {{ end }}
-        <nav class="header-items" aria-label="文章分类">
-          <a class="header-item" href="/"{{ if eq $channel "tech" }} aria-current="page"{{ end }}>{{ if eq $channel "tech" }}<strong>Tech</strong>{{ else }}Tech{{ end }}</a>
-          <a class="header-item" href="/life/"{{ if eq $channel "life" }} aria-current="page"{{ end }}>{{ if eq $channel "life" }}<strong>Life</strong>{{ else }}Life{{ end }}</a>
+        <nav class="header-items post-tabs" aria-label="文章分类">
+          <a class="header-item" href="/?tab=tech" data-tab="tech"{{ if eq $channel "tech" }} aria-current="page"{{ end }}>Tech</a>
+          <a class="header-item" href="/?tab=life" data-tab="life"{{ if eq $channel "life" }} aria-current="page"{{ end }}>Life</a>
         </nav>
         <div id="posts-list">
-          {{ range (where site.RegularPages "Section" $channel).GroupByDate "2006" }}
+          {{ range $tab := slice "tech" "life" }}
+          <div data-posts-tab="{{ $tab }}"{{ if ne $tab $channel }} hidden{{ end }}>
+          {{ range (where site.RegularPages "Section" $tab).GroupByDate "2006" }}
           <section>
             <h1 class="site-date-catalog">{{ .Key }}</h1>
             {{ range .Pages }}
@@ -42,11 +44,14 @@
             {{ end }}
           </section>
           {{ end }}
+          </div>
+          {{ end }}
         </div>
         {{ partial "footer.html" . }}
       </div>
     </div>
   </article>
+  <script src="{{ "js/post-tabs.js" | relURL }}"></script>
   {{ partial "scripts.html" . }}
 </body>
 </html>
